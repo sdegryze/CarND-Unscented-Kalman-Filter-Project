@@ -37,6 +37,14 @@ int main()
   Tools tools;
   vector<VectorXd> estimations;
   vector<VectorXd> ground_truth;
+  
+  ofstream radarNisFile;
+  ofstream laserNisFile;
+  radarNisFile.open("radar_nis.txt", ofstream::out);
+  laserNisFile.open("laser_nis.txt", ofstream::out);
+  ukf.radarNisFile = &radarNisFile;
+  ukf.laserNisFile = &laserNisFile;
+
 
   h.onMessage([&ukf,&tools,&estimations,&ground_truth](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
@@ -105,7 +113,7 @@ int main()
     	  gt_values(3) = vy_gt;
     	  ground_truth.push_back(gt_values);
           
-          //Call ProcessMeasurment(meas_package) for Kalman filter
+        //Call ProcessMeasurment(meas_package) for Kalman filter
     	  ukf.ProcessMeasurement(meas_package);    	  
 
     	  //Push the current estimated x,y positon from the Kalman filter's state vector
@@ -185,6 +193,12 @@ int main()
     return -1;
   }
   h.run();
+  if (radarNisFile.is_open()){
+    radarNisFile.close();
+  }
+  if (laserNisFile.is_open()){
+    laserNisFile.close();
+  }
 }
 
 

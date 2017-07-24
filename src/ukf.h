@@ -3,6 +3,7 @@
 
 #include "measurement_package.h"
 #include "Eigen/Dense"
+#include "tools.h"
 #include <vector>
 #include <string>
 #include <fstream>
@@ -60,13 +61,28 @@ public:
 
   ///* State dimension
   int n_x_;
+  
+  int n_z_;
 
   ///* Augmented state dimension
   int n_aug_;
 
   ///* Sigma point spreading parameter
   double lambda_;
+  
+  Tools tools;
+  
+  // Initialize and set measurement covariance matrix for laser
 
+  // Measurement function matrix for laser
+  MatrixXd H_laser_;
+  // Measurement covariance matrix for laser
+  MatrixXd R_laser_;
+  
+  MatrixXd I_;
+  
+  ofstream* radarNisFile;
+  ofstream* laserNisFile;
 
   /**
    * Constructor
@@ -77,6 +93,12 @@ public:
    * Destructor
    */
   virtual ~UKF();
+  
+  void CreateSigmaPoints(MatrixXd* Xsig_out);
+  void PredictSigmaPoints(MatrixXd Xsig_aug, float delta_t);
+  void CalcMeanAndCovariance(VectorXd* x_out, MatrixXd* P_out);
+  void PredictRadarMeasurement(VectorXd z, VectorXd* z_out, MatrixXd* zdiff_out, MatrixXd* S_out);
+  float UpdateRadarWithPrediction(MatrixXd Zsig, VectorXd z_pred, VectorXd z, MatrixXd S);
 
   /**
    * ProcessMeasurement
@@ -95,13 +117,13 @@ public:
    * Updates the state and the state covariance matrix using a laser measurement
    * @param meas_package The measurement at k+1
    */
-  void UpdateLidar(MeasurementPackage meas_package);
+  float UpdateLidar(MeasurementPackage meas_package);
 
   /**
    * Updates the state and the state covariance matrix using a radar measurement
    * @param meas_package The measurement at k+1
    */
-  void UpdateRadar(MeasurementPackage meas_package);
+  float UpdateRadar(MeasurementPackage meas_package);
 };
 
 #endif /* UKF_H */
