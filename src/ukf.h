@@ -70,6 +70,9 @@ public:
   ///* Sigma point spreading parameter
   double lambda_;
   
+  ///* Number of sigma points
+  int nr_sigma;
+  
   Tools tools;
   
   // Initialize and set measurement covariance matrix for laser

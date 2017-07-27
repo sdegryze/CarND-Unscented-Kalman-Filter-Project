@@ -40,11 +40,15 @@ int main()
   
   ofstream radarNisFile;
   ofstream laserNisFile;
-  radarNisFile.open("radar_nis.txt", ofstream::out);
-  laserNisFile.open("laser_nis.txt", ofstream::out);
-  ukf.radarNisFile = &radarNisFile;
-  ukf.laserNisFile = &laserNisFile;
-
+  
+  bool write_nis = false;
+  
+  if (write_nis) {
+    radarNisFile.open("radar_nis.txt", ofstream::out);
+    laserNisFile.open("laser_nis.txt", ofstream::out);
+    ukf.radarNisFile = &radarNisFile;
+    ukf.laserNisFile = &laserNisFile;
+  }
 
   h.onMessage([&ukf,&tools,&estimations,&ground_truth](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
