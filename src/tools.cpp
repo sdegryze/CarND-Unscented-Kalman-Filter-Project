@@ -40,14 +40,18 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
   return rmse;
 }
 
+float Tools::NormalizeAngle(float phi) {
+  //angle normalization
+  return atan2( sin(phi), cos(phi) );
+}
+
 void Tools::NormalizeAngle(MatrixXd* x, int i) {
   //angle normalization
-  while ((*x)(i)> M_PI) (*x)(1)-=2.*M_PI;
-  while ((*x)(i)<-M_PI) (*x)(1)+=2.*M_PI;
+  int n_col = x->cols();
+  for (int j = 0; j < n_col; j++) (*x)(i, j) = Tools::NormalizeAngle((*x)(i, j));
 }
 
 void Tools::NormalizeAngle(VectorXd* x, int i) {
   //angle normalization
-  while ((*x)(i)> M_PI) (*x)(1)-=2.*M_PI;
-  while ((*x)(i)<-M_PI) (*x)(1)+=2.*M_PI;
+  (*x)(i) = Tools::NormalizeAngle((*x)(i));
 }

@@ -24,8 +24,9 @@ public:
   */
   VectorXd CalculateRMSE(const vector<VectorXd> &estimations, const vector<VectorXd> &ground_truth);
 
-  void NormalizeAngle(MatrixXd* x, int i) ;
-  void NormalizeAngle(VectorXd* x, int i) ;
+  float NormalizeAngle(float phi);
+  void NormalizeAngle(MatrixXd* x, int i);
+  void NormalizeAngle(VectorXd* x, int i);
 };
 
 #endif /* TOOLS_H_ */
